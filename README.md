@@ -1,0 +1,1 @@
+# bidpoint-candidate-app
