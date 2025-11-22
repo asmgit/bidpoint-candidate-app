@@ -15,10 +15,12 @@ type PayloadSchema = z.output<typeof payloadSchema>;
 
 const schema = z.object({
   cv: z.file().describe('Your CV in PDF format'),
+  payload: payloadSchema,
 })
 type Schema = z.output<typeof schema>;
+type PartialSchema = Partial<Schema> & { payload: Partial<PayloadSchema> };
 
-const state = reactive<Partial<Schema> & { payload: Partial<PayloadSchema> }>({
+const state = reactive<PartialSchema>({
   payload: { name: 'Test', email: 'test@protonmail.com' }
 });
 
@@ -26,7 +28,7 @@ const dryRun = ref(true);
 const ui = computed(() => jsonSchemaToUISchema(z.toJSONSchema(payloadSchema)));
 
 const toast = useToast()
-async function onSubmit({ data }: FormSubmitEvent<Schema & { payload: PayloadSchema }>) {
+async function onSubmit({ data }: FormSubmitEvent<Schema>) {
   const formData = new FormData();
   formData.append('cv', data.cv);
   formData.append('payload', JSON.stringify(data.payload));
